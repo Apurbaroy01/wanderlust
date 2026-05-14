@@ -4,11 +4,21 @@ import { Button, FieldError, Input, Label, ListBox, TextArea, TextField, Select 
 
 
 const adddestinationPage = () => {
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
         console.log("Form Data:", data);
+
+        const res = await fetch("http://localhost:5000/destinations", {
+            method: "POST",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        console.log("Server Response:", result);
     };
 
     return (
