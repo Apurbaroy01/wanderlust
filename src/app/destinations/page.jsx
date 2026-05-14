@@ -9,9 +9,7 @@ const DestinationPage = async () => {
         const res = await fetch(
             "http://localhost:5000/destinations",
             {
-                next:{
-                    revalidate: 20
-                }
+                cache: "no-store"
             }
         );
 
@@ -21,11 +19,11 @@ const DestinationPage = async () => {
 
         destinations = await res.json();
 
-        // console.log("Destinations Data:", destinations);
+        console.log("Destinations Data:", destinations);
 
     } catch (error) {
 
-        console.log(error);
+        console.log(error.message);
 
     }
 
