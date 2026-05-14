@@ -12,7 +12,7 @@ const DestinationCard = ({ destination }) => {
             <Image
                 className=""
                 alt={destinationName}
-                src={imageUrl}
+                src={imageUrl.trim()}
                 height={400}
                 width={400}
             />

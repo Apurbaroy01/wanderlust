@@ -1,24 +1,56 @@
 'use client';
-
+import { useState } from "react";
 import { Button, FieldError, Input, Label, ListBox, TextArea, TextField, Select } from "@heroui/react";
+import toast from "react-hot-toast";
 
 
-const adddestinationPage = () => {
+
+const AdddestinationPage = () => {
+    const [loading, setLoading] = useState(false);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData.entries());
-        console.log("Form Data:", data);
+        setLoading(true);
 
-        const res = await fetch("http://localhost:5000/destinations", {
-            method: "POST",
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        const result = await res.json();
-        console.log("Server Response:", result);
+        const toastId = toast.loading("Adding destination...");
+
+        try {
+            const form = e.target;
+
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            const res = await fetch("http://localhost:5000/destinations", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await res.json();
+
+            if (!res.ok) {
+                throw new Error(result?.message || "Failed to add destination");
+            }
+
+            toast.success("Destination added successfully", {
+                id: toastId,
+            });
+
+            form.reset();
+
+            console.log(result);
+
+        } catch (error) {
+            console.error(error);
+
+            toast.error(error.message || "Something went wrong", {
+                id: toastId,
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -149,12 +181,13 @@ const adddestinationPage = () => {
                     type="submit"
                     variant="outline"
                     className=" rounded-none w-full bg-cyan-500 text-white"
+                    disabled={loading}
                 >
-                    Add Travel Package
+                    {loading ? "Submitting..." : "Add Destination"}
                 </Button>
             </form>
         </div>
     );
 };
 
-export default adddestinationPage;
+export default AdddestinationPage;
