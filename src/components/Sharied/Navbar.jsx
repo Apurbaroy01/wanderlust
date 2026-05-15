@@ -38,7 +38,7 @@ const Navbar = () => {
           <Link href={"/login"}>Login</Link>
         </li>
         <li>
-          <Link href={"/signup"}>Sign Up</Link>
+          <Link href={"/register"}>Sign Up</Link>
         </li>
       </ul>
     </nav>
