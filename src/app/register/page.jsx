@@ -2,13 +2,16 @@
 
 import { authClient } from "@/lib/auth-client";
 import { Check } from "@gravity-ui/icons";
-import { Button, Description, FieldError, Form, Input, Label, TextField } from "@heroui/react";
+import { Button, Description, FieldError, Form, Input, Label, Spinner, TextField } from "@heroui/react";
 import { Card } from '@heroui/react';
 import Link from "next/link";
+import { useState } from "react";
 
 const RegisterPage = () => {
+    const [loading, setLoading] = useState(false);
     const handleRegister = async (e) => {
         e.preventDefault();
+        setLoading(true);
         const formData = new FormData(e.target);
         const user = Object.fromEntries(formData);
         console.log("Registration data:", user);
@@ -18,12 +21,16 @@ const RegisterPage = () => {
             name: user.name, // required
             email: user.email, // required
             password: user.password, // required
-
+                options: {
+                    autoLogin: true,
+                },
         });
         if (error) {
+            setLoading(false);
             console.error("Registration error:", error);
             alert("Registration failed: " + error.message);
         } else {
+            setLoading(false);
             console.log("Registration successful:", data);
             alert("Registration successful! Please check your email to verify your account.");
         }
@@ -84,9 +91,18 @@ const RegisterPage = () => {
                         <FieldError />
                     </TextField>
                     <div className="flex w-full gap-2">
-                        <Button type="submit " className="flex w-full items-center gap-2">
-                            <Check />
-                            Submit
+                        <Button type="submit " className="flex w-full items-center gap-2" disabled={loading}>
+                            {loading ? (
+                                <>
+                                    <Spinner />
+                                    Submitting...
+                                </>
+                            ) : (
+                                <>
+                                    <Check />
+                                    Submit
+                                </>
+                            )}
                         </Button>
                     </div>
                 </Form>

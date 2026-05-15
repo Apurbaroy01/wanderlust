@@ -1,8 +1,23 @@
+"use client";
+import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 import Link from "next/link";
 
 const Navbar = () => {
-  
+
+  const {
+    data: session,
+    isPending, //loading state
+    error, //error object
+    refetch //refetch the session
+  } = authClient.useSession();
+
+  if (error) {
+    return <p>Error: {error.message}</p>;
+  }
+
+  console.log("Session data:", session);
+
   return (
     <nav className="flex justify-between bg-white p-5">
       <ul className="flex gap-3">
@@ -31,15 +46,19 @@ const Navbar = () => {
       </div>
 
       <ul className="flex gap-3">
-        <li>
-          <Link href={"/profile"}>Profile</Link>
-        </li>
-        <li>
-          <Link href={"/login"}>Login</Link>
-        </li>
-        <li>
-          <Link href={"/register"}>Sign Up</Link>
-        </li>
+        
+        {isPending ? <p>Loading...</p> : session ? <div className="flex gap-3">
+          <li> <Link href={"/profile"}>Profile</Link></li>
+          <li><button className="btn " onClick={() => authClient.signOut()}>Logout</button></li>
+        </div> :
+          <div className="flex gap-3">
+            <li>
+              <Link href={"/login"}>Login</Link>
+            </li>
+            <li>
+              <Link href={"/register"}>Sign Up</Link>
+            </li>
+          </div>}
       </ul>
     </nav>
   );
