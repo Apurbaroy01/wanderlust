@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 const Navbar = () => {
+  
   return (
     <nav className="flex justify-between bg-white p-5">
       <ul className="flex gap-3">

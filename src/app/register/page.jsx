@@ -1,16 +1,32 @@
 "use client";
-import {Check} from "@gravity-ui/icons";
-import {Button, Description, FieldError, Form, Input, Label, TextField} from "@heroui/react";
+
+import { authClient } from "@/lib/auth-client";
+import { Check } from "@gravity-ui/icons";
+import { Button, Description, FieldError, Form, Input, Label, TextField } from "@heroui/react";
 import { Card } from '@heroui/react';
 import Link from "next/link";
 
 const RegisterPage = () => {
-    const handleRegister = (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData);
-        console.log("Registration data:", data);
+        const user = Object.fromEntries(formData);
+        console.log("Registration data:", user);
         // Here you would typically send the registration data to your backend API
+
+        const { data, error } = await authClient.signUp.email({
+            name: user.name, // required
+            email: user.email, // required
+            password: user.password, // required
+
+        });
+        if (error) {
+            console.error("Registration error:", error);
+            alert("Registration failed: " + error.message);
+        } else {
+            console.log("Registration successful:", data);
+            alert("Registration successful! Please check your email to verify your account.");
+        }
     }
 
     return (
@@ -18,6 +34,16 @@ const RegisterPage = () => {
             <Card className="w-full max-w-md p-6 ">
                 <h1 className="text-2xl font-bold mb-4 text-center">Register</h1>
                 <Form className="flex w-96 flex-col gap-4" onSubmit={handleRegister}>
+                    <TextField
+                        isRequired
+                        name="name"
+                        type="text"
+                    >
+                        <Label>Name</Label>
+                        <Input placeholder="John Doe" />
+                        <FieldError />
+                    </TextField>
+
                     <TextField
                         isRequired
                         name="email"
@@ -33,6 +59,7 @@ const RegisterPage = () => {
                         <Input placeholder="john@example.com" />
                         <FieldError />
                     </TextField>
+                    
                     <TextField
                         isRequired
                         minLength={8}
