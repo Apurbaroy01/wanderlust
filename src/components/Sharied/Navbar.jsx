@@ -8,7 +8,7 @@ const Navbar = () => {
 
   const {
     data: session,
-    isPending, //loading state
+    isPending,
     error, //error object
     refetch //refetch the session
   } = authClient.useSession();
