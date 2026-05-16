@@ -1,4 +1,5 @@
 import { DeleteAlert } from "@/components/DeleteAlert";
+import BookingCard from "@/components/DestinationCard/BookingCard";
 import { EditModal } from "@/components/EditModal";
 import Image from "next/image";
 import { FaRegCalendar } from "react-icons/fa6";
@@ -76,12 +77,22 @@ const DestinationDetailsPage = async ({ params }) => {
                     </div>
                 </div>
 
-                <h1 className="mt-10 text-2xl font-bold">
-                    Overview
-                </h1>
+                <div className="flex justify-between items-center flex-col gap-10 mt-5 md:flex-row">
+                    <div>
+                        <h1 className="mt-10 text-2xl font-bold">
+                            Overview
+                        </h1>
 
-                <p>{destination.description}</p>
+                        <p>{destination.description}</p>
+                    </div>
+
+                    <div className="w-full md:w-auto border p-5 rounded-lg shadow-md">
+                        <BookingCard destination={destination} />
+                    </div>
+                </div>
+
             </div>
+
         </div>
     );
 };
