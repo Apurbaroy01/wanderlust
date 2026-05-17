@@ -20,6 +20,10 @@ const BookingCard = ({ destination }) => {
         const BookingData = {
             userId: session.user.id,
             destinationId: destination._id,
+            photo:destination.imageUrl,
+            destinationName: destination.destinationName,
+            price: destination.price,
+            description: destination.description,
             date: new Date(date),
         };
         // Handle booking logic here

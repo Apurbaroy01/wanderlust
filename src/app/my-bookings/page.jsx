@@ -1,7 +1,8 @@
 
-
 import Image from "next/image";
 import { Eye, Trash2, CalendarDays, MapPin, CheckCircle2 } from "lucide-react";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 const bookings = [
     {
@@ -33,7 +34,14 @@ const bookings = [
     },
 ];
 
-export default function MyBookingsPage() {
+export default async function MyBookingsPage() {
+
+    const session = await auth.api.getSession({
+        headers: await headers() // you need to pass the headers object.
+    })
+
+    console.log("Session in My Bookings Page:", session);
+
     return (
         <div className="max-w-6xl mx-auto px-4 py-10">
             {/* Header */}
@@ -69,8 +77,8 @@ export default function MyBookingsPage() {
                                 {/* Status */}
                                 <div
                                     className={`inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full w-fit mb-3 ${booking.status === "Confirmed"
-                                            ? "bg-green-100 text-green-700"
-                                            : "bg-orange-100 text-orange-700"
+                                        ? "bg-green-100 text-green-700"
+                                        : "bg-orange-100 text-orange-700"
                                         }`}
                                 >
                                     <CheckCircle2 size={14} />
