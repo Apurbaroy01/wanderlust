@@ -4,35 +4,6 @@ import { Eye, Trash2, CalendarDays, MapPin, CheckCircle2 } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
-const bookings = [
-    {
-        id: "b1",
-        title: "Bali Paradise",
-        status: "Confirmed",
-        price: 1299,
-        date: "May 15, 2026",
-        image:
-            "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop",
-    },
-    {
-        id: "b2",
-        title: "Bali Paradise",
-        status: "Confirmed",
-        price: 1299,
-        date: "May 15, 2026",
-        image:
-            "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?q=80&w=1200&auto=format&fit=crop",
-    },
-    {
-        id: "b3",
-        title: "Venice & Italian Riviera",
-        status: "Pending",
-        price: 1299,
-        date: "May 15, 2026",
-        image:
-            "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop",
-    },
-];
 
 export default async function MyBookingsPage() {
 
@@ -40,7 +11,23 @@ export default async function MyBookingsPage() {
         headers: await headers() // you need to pass the headers object.
     })
 
-    console.log("Session in My Bookings Page:", session);
+    if (!session?.user) {
+        return (
+            <div className="max-w-6xl mx-auto px-4 py-10">
+                <h1 className="text-4xl font-bold text-black">
+                    Please log in to view your bookings
+                </h1>
+            </div>
+        );
+    }
+
+    const res = await fetch(`http://localhost:5000/bookings/${session?.user.id}`, {
+        cache: "no-store",
+    });
+    const booking = await res.json();
+
+    console.log("Session in My Bookings Page:", booking);
+
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-10">
@@ -55,9 +42,9 @@ export default async function MyBookingsPage() {
 
             {/* Booking Cards */}
             <div className="space-y-5">
-                {bookings.map((booking) => (
+                {booking.map((booking) => (
                     <div
-                        key={booking.id}
+                        key={booking._id}
                         className="border border-gray-200 bg-white p-4 flex flex-col lg:flex-row gap-5 justify-between items-center"
                     >
                         {/* Left */}
@@ -65,8 +52,8 @@ export default async function MyBookingsPage() {
                             {/* Image */}
                             <div className="relative w-full md:w-[280px] h-[170px] overflow-hidden">
                                 <Image
-                                    src={booking.image}
-                                    alt={booking.title}
+                                    src={booking?.photo}
+                                    alt={booking?.title}
                                     fill
                                     className="object-cover"
                                 />
@@ -87,7 +74,7 @@ export default async function MyBookingsPage() {
 
                                 {/* Title */}
                                 <h2 className="text-3xl font-bold text-black mb-3">
-                                    {booking.title}
+                                    {booking?.title}
                                 </h2>
 
                                 {/* Info */}
@@ -99,7 +86,7 @@ export default async function MyBookingsPage() {
 
                                     <p className="flex items-center gap-2">
                                         <MapPin size={15} />
-                                        Booking ID: {booking.id}
+                                        Booking ID: {booking._id}
                                     </p>
                                 </div>
 
