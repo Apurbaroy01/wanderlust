@@ -1,8 +1,9 @@
-
+""
 import Image from "next/image";
 import { Eye, Trash2, CalendarDays, MapPin, CheckCircle2 } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import DeleteModal from "@/components/DeleteModal";
 
 
 export default async function MyBookingsPage() {
@@ -29,6 +30,12 @@ export default async function MyBookingsPage() {
     console.log("Session in My Bookings Page:", booking);
 
 
+    const handleDelete = (id) => {
+        console.log("Delete:", id);
+    };
+
+
+
     return (
         <div className="max-w-6xl mx-auto px-4 py-10">
             {/* Header */}
@@ -53,7 +60,7 @@ export default async function MyBookingsPage() {
                             <div className="relative w-full md:w-[280px] h-[170px] overflow-hidden">
                                 <Image
                                     src={booking?.photo}
-                                    alt={booking?.title}
+                                    alt={"Booking Image"}
                                     fill
                                     className="object-cover"
                                 />
@@ -99,10 +106,7 @@ export default async function MyBookingsPage() {
 
                         {/* Buttons */}
                         <div className="flex items-center gap-3">
-                            <button className="border border-red-300 text-red-500 px-5 py-2 flex items-center gap-2 hover:bg-red-50 transition">
-                                <Trash2 size={16} />
-                                Cancel
-                            </button>
+                            <DeleteModal details={booking} />
 
                             <button className="bg-cyan-500 text-white px-5 py-2 flex items-center gap-2 hover:bg-cyan-600 transition">
                                 <Eye size={16} />
