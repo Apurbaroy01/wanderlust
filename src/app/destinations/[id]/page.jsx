@@ -1,12 +1,22 @@
 import { DeleteAlert } from "@/components/DeleteAlert";
 import BookingCard from "@/components/DestinationCard/BookingCard";
 import { EditModal } from "@/components/EditModal";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import Image from "next/image";
 import { FaRegCalendar } from "react-icons/fa6";
 import { LuMapPin } from "react-icons/lu";
 
 const DestinationDetailsPage = async ({ params }) => {
     const { id } = await params;
+
+    const { token } = await auth.api.getToken({
+        headers: await headers() // you need to pass the headers object.
+    });
+
+    console.log("Token in Destination Details Page:", token);
+
+
 
     let destination = null;
 
@@ -15,7 +25,11 @@ const DestinationDetailsPage = async ({ params }) => {
             `http://localhost:5000/destinations/${id}`,
             {
                 cache: "no-store",
-            }
+
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            },
         );
 
         if (!res.ok) {
