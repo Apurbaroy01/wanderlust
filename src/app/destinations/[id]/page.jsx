@@ -13,10 +13,7 @@ const DestinationDetailsPage = async ({ params }) => {
     const { token } = await auth.api.getToken({
         headers: await headers() // you need to pass the headers object.
     });
-
     console.log("Token in Destination Details Page:", token);
-
-
 
     let destination = null;
 
